@@ -13,13 +13,31 @@ function setup() {
 
   let p = random(chromotome);
   palette = p.colors;
-  background(color(p.background || palette[0]));
+  // background(color(p.background || palette[0]));
 
-  let numSplotches = floor(random(40, 400));
+  let noiseScale = random(0.003, 0.008);
+  let threshold = random(0.35, 0.55);
+  let numSplotches = floor(random(40, 200));
   for (let i = 0; i < numSplotches; i++) {
+    let cx = random(width);
+    let cy = random(height);
+    let n = noise(cx * noiseScale, cy * noiseScale);
+    if (n > threshold) {
+      splotches.push({
+        cx: cx,
+        cy: cy,
+        baseRadius: random(80, 300),
+        numDots: floor(random(3000, 50000)),
+        densityNoiseScale: random(0.015, 0.03),
+        densityNoiseOffset: random(1000)
+      });
+    }
+  }
+
+  if (splotches.length === 0) {
     splotches.push({
-      cx: random(width),
-      cy: random(height),
+      cx: width / 2,
+      cy: height / 2,
       baseRadius: random(80, 300),
       numDots: floor(random(3000, 50000)),
       densityNoiseScale: random(0.015, 0.03),
