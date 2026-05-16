@@ -27,7 +27,7 @@ function setup() {
         cx: cx,
         cy: cy,
         baseRadius: random(80, 300),
-        numDots: floor(random(3000, 50000)),
+        numDots: floor(random(10000, 50000)),
         densityNoiseScale: random(0.015, 0.03),
         densityNoiseOffset: random(1000)
       });
@@ -81,10 +81,17 @@ function drawSplotch(cx, cy, baseRadius, numDots, densityNoiseScale, densityNois
       (y - cy) * densityNoiseScale + densityNoiseOffset
     );
 
+    // Original blob boundary: density > threshold defines the shape
     let threshold = map(r, 0, baseRadius, 0.2, 0.7);
+    let distFromEdge = density - threshold; // 0 = at edge, positive = inside blob
 
-    if (density > threshold && x > 0 && x < width && y > 0 && y < height) {
-      ellipse(x, y, random(1, 3));
+    // Only draw points inside the blob, concentrated near the edge
+    let bandWidth = 0.3;
+    if (distFromEdge > 0 && distFromEdge < bandWidth && x > 0 && x < width && y > 0 && y < height) {
+      let drawProb = map(distFromEdge, 0, bandWidth, 1.0, 0.0);
+      if (random() < drawProb) {
+        ellipse(x, y, random(1, 3));
+      }
     }
   }
 }
