@@ -28,7 +28,7 @@ function drawSplotch(cx, cy) {
   cx = cx || random(width);
   cy = cy || random(height);
   let baseRadius = random(80, 300);
-  let numDots = floor(random(3000, 6000));
+  let numDots = floor(random(3000, 50000));
   let densityNoiseScale = random(0.015, 0.03);
   let densityNoiseOffset = random(1000);
 
