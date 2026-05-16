@@ -5,28 +5,41 @@
  ************************************************/
 
 let palette;
+let splotches = [];
+let currentSplotch = 0;
 
 function setup() {
   createCanvas(800, 800);
-  noLoop();
 
   let p = random(chromotome);
   palette = p.colors;
   background(color(p.background || palette[0]));
 
-  let numSplotches = floor(random(40, 80));
+  let numSplotches = floor(random(40, 400));
   for (let i = 0; i < numSplotches; i++) {
-    drawSplotch();
+    splotches.push({
+      cx: random(width),
+      cy: random(height),
+      baseRadius: random(80, 300),
+      numDots: floor(random(3000, 50000)),
+      densityNoiseScale: random(0.015, 0.03),
+      densityNoiseOffset: random(1000)
+    });
   }
 }
 
-function drawSplotch(cx, cy) {
-  cx = cx || random(width);
-  cy = cy || random(height);
-  let baseRadius = random(80, 300);
-  let numDots = floor(random(3000, 50000));
-  let densityNoiseScale = random(0.015, 0.03);
-  let densityNoiseOffset = random(1000);
+function draw() {
+  if (currentSplotch >= splotches.length) {
+    noLoop();
+    return;
+  }
+
+  let s = splotches[currentSplotch];
+  drawSplotch(s.cx, s.cy, s.baseRadius, s.numDots, s.densityNoiseScale, s.densityNoiseOffset);
+  currentSplotch++;
+}
+
+function drawSplotch(cx, cy, baseRadius, numDots, densityNoiseScale, densityNoiseOffset) {
 
   let baseColor = color(random(palette));
   let dotColor = color(
