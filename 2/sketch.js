@@ -4,19 +4,15 @@
  * Canvas texture stacker
  ************************************************/
 
-const palette = [
-  '#656565',
-  '#808782',
-  '#A6D3A0',
-  '#D1FFD7',
-  '#B3FFB3'
-];
+let palette;
 
 function setup() {
   createCanvas(800, 800);
   noLoop();
 
-  background(color(palette[3]));
+  let p = random(chromotome);
+  palette = p.colors;
+  background(color(p.background || palette[0]));
 
   let numSplotches = floor(random(40, 80));
   for (let i = 0; i < numSplotches; i++) {
