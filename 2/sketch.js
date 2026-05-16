@@ -28,10 +28,9 @@ function drawSplotch(cx, cy) {
   cx = cx || random(width);
   cy = cy || random(height);
   let baseRadius = random(80, 300);
-  let blobNoiseScale = 0.02;
-  let blobNoiseOffset = random(1000);
-  let numDots = floor(random(2000, 5000));
-  let dotNoiseScale = random(0.02, 0.04);
+  let numDots = floor(random(3000, 6000));
+  let densityNoiseScale = random(0.015, 0.03);
+  let densityNoiseOffset = random(1000);
 
   let baseColor = color(random(palette));
   let dotColor = color(
@@ -46,18 +45,19 @@ function drawSplotch(cx, cy) {
 
   for (let i = 0; i < numDots; i++) {
     let angle = random(TWO_PI);
-    let noiseVal = noise(
-      cos(angle) * blobNoiseScale + blobNoiseOffset,
-      sin(angle) * blobNoiseScale + blobNoiseOffset
-    );
-    let r = map(noiseVal, 0, 1, baseRadius * 0.3, baseRadius * 1.4);
+    let r = random(baseRadius);
     let x = cx + r * cos(angle);
     let y = cy + r * sin(angle);
 
-    if (x > 0 && x < width && y > 0 && y < height) {
-      if (noise(x * dotNoiseScale, y * dotNoiseScale) > random(0.3, 0.55)) {
-        ellipse(x, y, random(1, 3));
-      }
+    let density = noise(
+      (x - cx) * densityNoiseScale + densityNoiseOffset,
+      (y - cy) * densityNoiseScale + densityNoiseOffset
+    );
+
+    let threshold = map(r, 0, baseRadius, 0.2, 0.7);
+
+    if (density > threshold && x > 0 && x < width && y > 0 && y < height) {
+      ellipse(x, y, random(1, 3));
     }
   }
 }
